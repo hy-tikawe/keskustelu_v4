@@ -1,3 +1,4 @@
+import math
 from flask import Flask
 from flask import abort, make_response, redirect, render_template, request, session
 import config, db, forum, users
@@ -25,9 +26,18 @@ def require_login():
 @app.route("/")
 @app.route("/<int:page>")
 def index(page=1):
-    page = max(page, 1)
-    threads = forum.get_threads(page)
-    return render_template("index.html", page=page, threads=threads)
+    thread_count = forum.thread_count()
+    page_size = 10
+    page_count = math.ceil(thread_count / page_size)
+    page_count = max(page_count, 1)
+
+    if page < 1:
+        return redirect("/1")
+    if page > page_count:
+        return redirect("/" + str(page_count))
+
+    threads = forum.get_threads(page, page_size)
+    return render_template("index.html", page=page, page_count=page_count, threads=threads)
 
 @app.route("/register")
 def register():

@@ -1,7 +1,10 @@
 import db
 
-def get_threads(page):
-    page_size = 10
+def thread_count():
+    sql = "SELECT COUNT(*) FROM threads"
+    return db.query(sql)[0][0]
+
+def get_threads(page, page_size):
     sql = """SELECT t.id, t.title, COUNT(m.id) total, MAX(m.sent_at) last
              FROM threads t, messages m
              WHERE t.id = m.thread_id
