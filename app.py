@@ -1,7 +1,7 @@
 import math
 from flask import Flask
 from flask import abort, make_response, redirect, render_template, request, session
-import config, db, forum, users
+import config, forum, users
 
 import time
 from flask import g
